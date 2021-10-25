@@ -1,16 +1,34 @@
 version: "2"
 services:
-  app:
-    container_name: app
+  backend:
+    container_name: backend
     restart: always
-    build: .
+    build:
+      context: ./
+      dockerfile: ./server_app/Dockerfile
     environment:
       - MONGO_URI=mongodb://mongo:27017/brmodeloDB
+      - PORT=3000
+      - API_URL=localhost:9000
     ports:
       - "3000:3000"
-      - "9000:9000"
     links:
       - mongo
+    depends_on:
+      - mongo
+  frontend:
+    image: webpack
+    container_name: frontend
+    build:
+      context: ./
+      dockerfile: ./app/Dockerfile
+    ports:
+      - 9000:9000
+    links:
+      - backend
+    volumes:
+      - ./app:/app/bindmount:rw
+      - ./node_modules:/src/node_modules
   mongo:
     container_name: mongo
     image: mongo
@@ -18,3 +36,6 @@ services:
       - ./data:/data/db
     ports:
       - "27017:27017"
+volumes:
+  node_modules:
+  db:

@@ -16,6 +16,7 @@ module.exports = {
 		contentBase: path.join(__dirname, "app"),
 		compress: true,
 		port: 9000,
+		host: '0.0.0.0',
 	},
 	plugins: [
 		new Dotenv({ systemvars: true }),
